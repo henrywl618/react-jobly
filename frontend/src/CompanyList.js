@@ -1,10 +1,15 @@
 import { Container } from "reactstrap";
 import CompanyCard from "./CompanyCard";
 import { JoblyApi } from "./api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "./hooks";
+import { UserContext } from "./Context";
+import { useHistory } from "react-router-dom";
 
 const CompanyList = () => {
+
+    const {user} = useContext(UserContext);
+    const history = useHistory();
 
     const updateCompanies = async (searchTerms) => {
         let newCompanies = await JoblyApi.getCompanies(searchTerms);
@@ -15,6 +20,8 @@ const CompanyList = () => {
     const { formData, handleSubmit, handleChange } = useForm(updateCompanies,{ name:"" });
 
     useEffect( () => {
+        //redirect user if they are not logged in
+        if(!user) history.push("/");
         updateCompanies();
     }, [] );
 

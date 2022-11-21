@@ -15,6 +15,7 @@ const Profile = () => {
     const { formData, setFormData, handleSubmit, handleChange } = useForm(updateUser, {});
 
     useEffect( () => {
+        if(!user) history.push("/");
         const getUserInfo = async (user) => {
             const userInfo = await JoblyApi.getUser(user);
             const {username, firstName, lastName, email} = userInfo;
