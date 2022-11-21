@@ -20,7 +20,7 @@ class JoblyApi {
     //there are multiple ways to pass an authorization token, this is how you pass it in the header.
     //this has been provided to show you another way to pass the token. you are only expected to read this code for this project.
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${JoblyApi.token}` };
+    const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
     const params = (method === "get")
         ? data
         : {};
@@ -68,12 +68,37 @@ class JoblyApi {
     return res.jobs
   };
 
-  // obviously, you'll add a lot here ...
+  /** Register user and returns JWT*/
+
+  static async registerUser(userInfo) {
+    let res = await this.request(`auth/register`, userInfo, 'post');
+    return { token: res.token, user: userInfo.username}
+  }
+
+  /** Logins user */
+
+  static async login(loginInfo) {
+    let res = await this.request(`auth/token`, loginInfo, 'post');
+    return { token: res.token, user: loginInfo.username}
+  }
+
+  /** Get user details */
+  static async getUser(username) {
+    let res = await this.request(`users/${username}`);
+    return res.user
+  }
+
+  /** Updates a user */
+  static async updateUser(userInfo) {
+    const { firstName, lastName, email } = userInfo;
+    let res = await this.request(`users/${userInfo.username}`, {firstName, lastName, email}, 'patch');
+    return res.user
+  };
 }
 
 // for now, put token ("testuser" / "password" on class)
-JoblyApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
-    "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
-    "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
+// JoblyApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
+//     "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
+//     "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
 
 export { JoblyApi };
