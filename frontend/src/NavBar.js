@@ -21,7 +21,7 @@ const NavBar = ({ logout }) => {
                                 <NavLink exact to="/jobs">Jobs</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink exact to="/profile">{user}</NavLink>
+                                <NavLink exact to="/profile">{user.username}</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink exact to="/" onClick={logout}>Logout</NavLink>

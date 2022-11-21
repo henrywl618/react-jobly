@@ -17,12 +17,12 @@ const Profile = () => {
     useEffect( () => {
         if(!user) history.push("/");
         const getUserInfo = async (user) => {
-            const userInfo = await JoblyApi.getUser(user);
+            const userInfo = await JoblyApi.getUser(user.username);
             const {username, firstName, lastName, email} = userInfo;
             setFormData({username, firstName, lastName, email, password:""});
         }
         getUserInfo(user);
-    },[]);
+    },[user]);
 
     return (
         <Container className="col-4">

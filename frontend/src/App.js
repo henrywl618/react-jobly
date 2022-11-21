@@ -11,6 +11,7 @@ function App() {
 
   const [ user, setUser ] = useState(localStorage.getItem("user"));
   const [ token, setToken ] = useState(localStorage.getItem("token"));
+  const [ application, setApplication ] = useState([]);
 
   const logout = () => {
     setUser(null);
@@ -22,14 +23,26 @@ function App() {
   const login = async (loginInfo) => {
     let res = await JoblyApi.login(loginInfo);
     setToken(res.token);
-    setUser(res.user);
     localStorage.setItem('token', res.token);
-    localStorage.setItem('user', res.user);
+    let userInfo = await JoblyApi.getUser(loginInfo.username);
+    setUser(userInfo);
+    setApplication(userInfo.applications);
+    localStorage.setItem('user', userInfo.username);
   };
+
+  useEffect(()=>{
+    const getUserData = async ()=>{
+      const username = localStorage.getItem("user");
+      let res = await JoblyApi.getUser(username);
+      setUser(res);
+      setApplication(res.applications);
+    };
+    getUserData();
+  },[]);
   
   return (
     <div className="App">
-      <UserContext.Provider value={{user, setUser, token, setToken, login}}>
+      <UserContext.Provider value={{user, setUser, token, setToken, login, application, setApplication}}>
         <BrowserRouter>
           <NavBar logout={logout}/>
           <Routes/>

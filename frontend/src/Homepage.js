@@ -11,7 +11,7 @@ const HomePage = () => {
             <p> All the jobs in one, convenient place.</p>
             {
                 user ?
-                <p>Welcome back {user}!</p>
+                <p>Welcome back {user.username}!</p>
                 :
                 <div>
                     <Link to="/login">
